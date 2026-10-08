@@ -451,9 +451,10 @@ bool cortexm_probe(adiv5_access_port_s *ap)
 		PROBE(ch579_probe);
 		break;
 	case JEP106_MANUFACTURER_NXP:
-		if ((target->cpuid & CORTEX_CPUID_PARTNO_MASK) == CORTEX_M33)
+		if ((target->cpuid & CORTEX_CPUID_PARTNO_MASK) == CORTEX_M33) {
+			PROBE(mcxa_probe);
 			PROBE(lpc55xx_probe);
-		else
+		} else
 			DEBUG_WARN("Unhandled NXP device\n");
 		break;
 	case JEP106_MANUFACTURER_ARM_CHINA:

@@ -413,7 +413,7 @@ void adiv5_dp_init(adiv5_debug_port_s *const dp)
 		dp->partno = (dpidr & ADIV5_DP_DPIDR_PARTNO_MASK) >> ADIV5_DP_DPIDR_PARTNO_OFFSET;
 
 		/* Minimal Debug Port (MINDP) functions implemented */
-		dp->quirks = (dpidr >> ADIV5_DP_DPIDR_MINDP_OFFSET) & ADIV5_DP_QUIRK_MINDP;
+		dp->quirks |= (dpidr >> ADIV5_DP_DPIDR_MINDP_OFFSET) & ADIV5_DP_QUIRK_MINDP;
 
 		/*
 		 * Check DPIDR validity
@@ -443,7 +443,11 @@ void adiv5_dp_init(adiv5_debug_port_s *const dp)
 	 */
 	adiv5_dp_clear_sticky_errors(dp);
 
-	if (dp->version >= 2) {
+	/*
+	 * The MCXA zero-TARGETID quirk was identified during SWD discovery. Do not
+	 * reread it or replace the zero TARGETSEL used for protocol recovery.
+	 */
+	if (dp->version >= 2 && !(dp->quirks & ADIV5_DP_QUIRK_ZERO_TARGETID)) {
 		uint32_t targetid = 0U;
 		uint8_t read_attempts = 0U;
 		/*
@@ -501,6 +505,9 @@ void adiv5_dp_init(adiv5_debug_port_s *const dp)
 	}
 
 #ifdef CONFIG_NXP
+	/* MCXA can have no TARGETID designer; its preparation hook checks AP1's ID. */
+	if (dp->target_designer_code == JEP106_MANUFACTURER_NXP || (dp->quirks & ADIV5_DP_QUIRK_ZERO_TARGETID))
+		mcxa_dp_prepare(dp);
 	if (dp->target_designer_code == JEP106_MANUFACTURER_NXP)
 		lpc55_dp_prepare(dp);
 #endif

@@ -243,15 +243,24 @@ bool adiv5_swd_scan_targetid(const uint32_t targetid)
 			adiv5_dp_write(dp, ADIV5_DP_SELECT, ADIV5_DP_BANK2);
 			dp_targetid = adiv5_dp_read(dp, ADIV5_DP_TARGETID);
 			adiv5_dp_write(dp, ADIV5_DP_SELECT, ADIV5_DP_BANK0);
+			/*
+			 * MCXA can return a zero TARGETID and accept TARGETSEL zero,
+			 * but forcing the architecturally required bit 0 to one deselects it.
+			 * Keep the working single-target connection and its zero recovery selector.
+			 */
+			if (dpidr == UINT32_C(0x6ba02477) && dp_targetid == 0U && !dp->fault) {
+				dp->quirks |= ADIV5_DP_QUIRK_ZERO_TARGETID;
+				DEBUG_INFO("Applying MCXA zero-TARGETID workaround\n");
+			}
 		}
 	}
 
-	/* If we were given targetid or we have a DPv2+ device, do a multi-drop scan */
+	/* Scan multi-drop for an explicit TARGETID or a DPv2+ device without the zero-TARGETID quirk. */
 #if CONFIG_BMDA == 0
 	/* On non hosted platforms, scan_multidrop can be constant */
 	const
 #endif
-		bool scan_multidrop = targetid || dp->version >= 2U;
+		bool scan_multidrop = targetid || (dp->version >= 2U && !(dp->quirks & ADIV5_DP_QUIRK_ZERO_TARGETID));
 
 #if CONFIG_BMDA == 1
 	if (scan_multidrop && !dp->write_no_check) {

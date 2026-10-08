@@ -71,6 +71,7 @@ bool imxrt_probe(target_s *target);
 bool ke04_probe(target_s *target);
 bool kinetis_probe(target_s *target);
 bool lmi_probe(target_s *target);
+bool mcxa_probe(target_s *target);
 bool lpc11xx_probe(target_s *target);
 bool lpc15xx_probe(target_s *target);
 bool lpc17xx_probe(target_s *target);
@@ -113,5 +114,6 @@ bool stm32c5_probe(target_s *target);
 bool zynq7_probe(target_s *target);
 
 void lpc55_dp_prepare(adiv5_debug_port_s *dp);
+void mcxa_dp_prepare(adiv5_debug_port_s *dp);
 
 #endif /* TARGET_TARGET_PROBE_H */

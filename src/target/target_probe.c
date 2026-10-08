@@ -43,10 +43,10 @@
 	{                                                       \
 		return target_probe_nop(target);                    \
 	}
-#define LPC55_DP_PREPARE_WEAK_NOP(name)                                   \
+#define DP_PREPARE_WEAK_NOP(name)                                         \
 	__attribute__((weak)) void name(adiv5_debug_port_s *const debug_port) \
 	{                                                                     \
-		lpc55_dp_prepare_nop(debug_port);                                 \
+		dp_prepare_nop(debug_port);                                       \
 	}
 #else
 #define CORTEXAR_PROBE_WEAK_NOP(name) \
@@ -54,8 +54,8 @@
 #define CORTEXM_PROBE_WEAK_NOP(name) \
 	extern bool name(adiv5_access_port_s *) __attribute__((weak, alias("cortexm_probe_nop")));
 #define TARGET_PROBE_WEAK_NOP(name) extern bool name(target_s *) __attribute__((weak, alias("target_probe_nop")));
-#define LPC55_DP_PREPARE_WEAK_NOP(name) \
-	extern void name(adiv5_debug_port_s *) __attribute__((weak, alias("lpc55_dp_prepare_nop")));
+#define DP_PREPARE_WEAK_NOP(name) \
+	extern void name(adiv5_debug_port_s *) __attribute__((weak, alias("dp_prepare_nop")));
 #endif
 
 static inline bool cortexar_probe_nop(adiv5_access_port_s *const access_port, const target_addr_t base_address)
@@ -77,7 +77,7 @@ static inline bool target_probe_nop(target_s *const target)
 	return false;
 }
 
-static inline void lpc55_dp_prepare_nop(adiv5_debug_port_s *const debug_port)
+static inline void dp_prepare_nop(adiv5_debug_port_s *const debug_port)
 {
 	(void)debug_port;
 }
@@ -120,6 +120,7 @@ TARGET_PROBE_WEAK_NOP(imxrt_probe)
 TARGET_PROBE_WEAK_NOP(ke04_probe)
 TARGET_PROBE_WEAK_NOP(kinetis_probe)
 TARGET_PROBE_WEAK_NOP(lmi_probe)
+TARGET_PROBE_WEAK_NOP(mcxa_probe)
 TARGET_PROBE_WEAK_NOP(lpc11xx_probe)
 TARGET_PROBE_WEAK_NOP(lpc15xx_probe)
 TARGET_PROBE_WEAK_NOP(lpc17xx_probe)
@@ -161,6 +162,7 @@ TARGET_PROBE_WEAK_NOP(stm32wb0_probe)
 TARGET_PROBE_WEAK_NOP(stm32c5_probe)
 TARGET_PROBE_WEAK_NOP(zynq7_probe)
 
-LPC55_DP_PREPARE_WEAK_NOP(lpc55_dp_prepare)
+DP_PREPARE_WEAK_NOP(lpc55_dp_prepare)
+DP_PREPARE_WEAK_NOP(mcxa_dp_prepare)
 
 #endif /* _WIN32 */

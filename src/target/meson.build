@@ -243,6 +243,7 @@ target_nxp = declare_dependency(
 	sources: files(
 		'imxrt.c',
 		'kinetis.c',
+		'mcxa.c',
 		'nxpke04.c',
 		's32k3xx.c',
 	),

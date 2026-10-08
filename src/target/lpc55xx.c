@@ -653,7 +653,7 @@ void lpc55_dp_prepare(adiv5_debug_port_s *const dp)
 
 bool lpc55_dmap_probe(adiv5_access_port_s *const ap)
 {
-	if (ap->idr != LPC55_DMAP_IDR)
+	if (ap->apsel != 2U || ap->idr != LPC55_DMAP_IDR)
 		return false;
 
 	target_s *const target = target_new();

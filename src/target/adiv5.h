@@ -233,8 +233,9 @@
 #define JTAG_IDCODE_PARTNO_SOC600_8BIT 0xba07U
 
 /* Constants for the DP's quirks field */
-#define ADIV5_DP_QUIRK_MINDP    (1U << 0U) /* DP is a minimal DP implementation */
-#define ADIV5_DP_QUIRK_DUPED_AP (1U << 1U) /* DP has only 1 AP but the address decoding is bugged */
+#define ADIV5_DP_QUIRK_MINDP         (1U << 0U) /* DP is a minimal DP implementation */
+#define ADIV5_DP_QUIRK_DUPED_AP      (1U << 1U) /* DP has only 1 AP but the address decoding is bugged */
+#define ADIV5_DP_QUIRK_ZERO_TARGETID (1U << 2U) /* MCXA requires TARGETSEL zero despite reporting DPv2 */
 /* This is not a quirk, but this field is a good place to store the underlying protocol */
 #define ADIV5_DP_JTAG (1U << 6U)
 /* This one is not a quirk, but the field's a convinient place to store this */
